@@ -1,0 +1,56 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+<!-- Название у нас будет Новости -->
+{% block title %}
+NEWS
+{% endblock title %}
+ 
+
+
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+
+<!-- <h4> {{ time_now }} </h4> -->
+    <h1>Добавить Новость</h1>
+    <h7>Залогинен под пользователем: </h>{{ logged_user }} 
+    
+     
+    {% if is_not_author %}
+    <button> <a href="/sign/upgrade/"> Стать автором!</a> </button>
+    {% endif %}
+
+
+    <form method="POST">
+        {% csrf_token %} 
+     <!--    {{ form }} Теперь нам нужна только готовая форма и кнопка -->
+        <br>
+        <h5>Наименование:</h5>
+        {{ form.post_title }}<br>
+        <br>
+        <h5>Содержание:</h5>
+        {{ form.article_text }}
+        <br>
+        <h5>Автор:</h5>
+        {{ form.author_post }}<br>
+        <br>
+        <h5>Рейтинг статьи:</h5>
+        {{ form.rating_article }}
+        <br>
+        <br>
+        <h5>Тип: статья/новость:</h5>
+        {{ form.position }}
+        <br>
+        <br>        
+        <h5>Категория:</h5>
+        {{ form.post_category }}
+        <br>
+        <br>
+        <br>
+        <input type="submit" value="Добавить новость">
+    </form>
+     
+{% endblock content %}
+    
+
+

@@ -1,0 +1,101 @@
+
+
+from news.models import User
+
+
+#  Создаем юзеров
+User.objects.create(username ='Andrey Vasil`ev', password = '12345')
+
+User.objects.create(username ='Sergey Petrov', password = '12345')
+
+
+from news.models import Author
+
+# Создаем авторов (в модели уже пользователи поэтому id 1 и 2)
+Author.objects.create(author_user=User.objects.get(id=1))
+Author.objects.create(author_user=User.objects.get(id=2))
+
+
+
+from news.models import Category
+
+# Создаем категории
+Category.objects.create(title_category='Политика')
+Category.objects.create(title_category='Экономика')
+Category.objects.create(title_category='Наука')
+Category.objects.create(title_category='Кино')
+
+
+
+from news.models import Post
+from news.models import PostCategory
+
+Post.objects.create(author_post = Author.objects.get(id=1), position = 'NE',post_title="Romans in the city", article_text='Romans in the city drink VODKA', rating_article = 1)
+Post.objects.create(author_post = Author.objects.get(id=2), position = 'AR',post_title="В вреде пьянства", article_text='Пить водку плохо. пейте молоко', rating_article = 3)
+Post.objects.create(author_post = Author.objects.get(id=1), position = 'AR',post_title="О полезной еде", article_text='Не ешьте на ночь.', rating_article = 2)
+
+
+присваиваем категории новостям
+
+post = Post.objects.get(id=1)
+post.post_category.add(Category.objects.get(id=1))
+post.post_category.add(Category.objects.get(id=2))
+
+
+
+Создать как минимум 4 комментария 
+from news.models import Comment
+
+comment_us = User.objects.get(id=2)
+post_com = Post.objects.get(id=1)
+Comment.objects.create(post_comment= post_com, comment_user= comment_us, comment_text='Комментарий №1')
+
+post_com = Post.objects.get(id=2)
+Comment.objects.create(post_comment= post_com, comment_user= comment_us, comment_text='Комментарий №2')
+
+
+comment_us = User.objects.get(id=1)
+post_com = Post.objects.get(id=3)
+Comment.objects.create(post_comment= post_com, comment_user= comment_us, comment_text='Комментарий №3')
+
+post_com = Post.objects.get(id=1)
+Comment.objects.create(post_comment= post_com, comment_user= comment_us, comment_text='Комментарий №4')
+
+
+Лайки и дизлайки  комментариям
+comments = Comment.objects.all()
+comments[2].comment_like()
+comments[3].comment_dislike()
+
+Лайк к посту
+post_com = Post.objects.get(id=1)
+post_com.post_like()
+
+
+меняем рейтинг поста
+post_com.rating_article = 25
+post_com.save()
+
+
+Упдейт рейтинга пользователя
+
+for auth_upd in Author.objects.all():
+    auth_upd.update_rating()
+
+
+Вывести username и рейтинг лучшего пользователя (применяя сортировку и возвращая поля первого объекта).
+
+Author.objects.all().order_by('-rating_user').values('author_user__username','rating_user')[0]
+
+Вывести дату добавления, username автора, рейтинг, заголовок и превью лучшей статьи, 
+основываясь на лайках/дислайках к этой статье.
+
+
+top_article = Post.objects.all().order_by('-rating_article')[0]
+best_article = Post.objects.all().order_by('-rating_article').values('post_datetime', 'author_post__author_user__username', 'post_title', 'rating_article', 'article_text')[0]
+
+top_article .preview()
+
+Вывести все комментарии (дата, пользователь, рейтинг, текст) к этой статье
+Comment.objects.filter(post_comment=top_article).values('comment_user__username', 'comment_datetime', 'comment_text')
+

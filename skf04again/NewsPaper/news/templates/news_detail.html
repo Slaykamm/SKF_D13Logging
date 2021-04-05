@@ -1,0 +1,75 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+
+<!-- Название у нас будет Новости -->
+{% block title %}
+News 
+{% endblock title %}
+ 
+<!-- В контенте на странице мы выводим все товары -->
+
+{% block content %}
+<h4> {{ time_now }}    </h4>
+    <h1>Подробно:</h1>
+    {% if post %}
+    <table>
+        <tr>
+            <td>
+                Заглавие
+            </td>
+            <td>
+                Дата и время публикации
+            </td>
+            <td>
+                Содержание
+            </td>
+            <td>
+                Категория
+            </td>
+                       
+        </tr>
+
+        <tr>
+            <td>
+                {{post.post_title|censor}}
+            </td>
+            <td>
+              <!--  {{post.post_datetime|date:'d M Y G:i'}} -->
+                {{post.post_datetime|date:'d M Y'}}
+
+            </td>
+            <td>
+                {{post.article_text|censor}}
+                
+            </td>
+            <td>
+            {% for cat in post.post_category.all %}
+                {{cat }}
+            {% endfor %}
+                
+            </td>
+            <td>
+                {% if not is_not_subscriber %}
+                
+                <button> <a href="subscribe">Подписаться </a> </button>
+
+                {% else %}
+
+                <button> <a href="unsubscribe">Отписаться </a> </button>
+
+                {% endif %}
+                
+            </td>
+            
+
+            
+        </tr>
+
+
+    </table>
+    {% else %}
+        <h2>Новостей на сегодня нет</h2>
+    {% endif %}
+{% endblock content %}
+

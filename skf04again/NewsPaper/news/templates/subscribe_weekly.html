@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2> Уважаемый {{ user }}, в категориях, на которые Вы подписались, за неделю появились следующие обновления:</h2>
+
+    <table>
+        <thead>
+            <th>
+                <p style="text-align: center;"><strong>Ссылка на статью</strong></p>
+            </th>
+    
+    
+        </thead>
+         <!-- поменяем products на filter.qs, т.к. теперь мы забираем уже отобранную по каким-то параметрам информацию -->
+        <tr>
+            <td>
+                {% for news_id in art_id %}
+                <p> обновление доступно по ссылке http://127.0.0.1:8000/news/{{news_id}}</p>   
+    
+                {% endfor %} 
+            </td>
+
+        </tr>
+
+
+    </table>
+
+</body>
+</html>

@@ -1,0 +1,101 @@
+{% extends 'default.html' %}
+
+{% load custom_filters %}
+<!-- Название у нас будет Новости -->
+{% block title %}
+NEWS
+{% endblock title %}
+ 
+<!-- В контенте на странице мы выводим все товары -->
+{% block content %}
+<h4> {{ time_now }} </h4> 
+    <h1>Новости Главная</h1>
+    <HR WIDTH="100%" ALIGN="center" SIZE="5">
+
+    <h3> Отображено новостей на странице: {{ posts|length  }} </h3>
+
+    <table>
+    <thead>
+        <th>
+            <p style="text-align: center;"><strong>Наименование статьи</strong></p>
+        </th>
+        <th>
+            <p style="text-align: center;"><strong>Дата публикации</strong></p>
+        </th>
+        <th>
+            <p style="text-align: center;"><strong>Тип: </strong></p>
+        </th>
+        <th>
+            <p style="text-align: center;"><strong>Автор </strong></p>
+        </th>
+        <th>
+            <p style="text-align: center;"><strong>Рейтинг </strong></p>
+        </th>
+        <th>
+            <p style="text-align: center;"><strong>Категория </strong></p>
+        </th>
+
+
+    </thead>
+    {% for post in posts %} <!-- поменяем products на filter.qs, т.к. теперь мы забираем уже отобранную по каким-то параметрам информацию -->
+    <tr>
+        <td>
+            <a href="{% url 'news_detail' post.id %}">{{ post.post_title|truncatewords:7 |censor}}</a> <!-- При нажатии на имя товара в таблице нас теперь будет перекидывать на страницу с информацией о товаре -->
+            <a href="{% url 'post_update' post.id %}"><u><strong>Редактировать</strong></u></a> <!-- добавим ссылку на редактирование товара-->
+            <a href="{% url 'post_delete' post.id %}"><u><strong>Удалить</strong> </u></a> <!-- добавим ссылку на удаление товара-->
+
+
+        </td>
+        <td>
+            {{post.post_datetime|date:'d M Y'}}
+        </td>
+        <td>
+            {{post.typeNews }}
+        </td>
+        <td>
+            {{post.author_post }}
+        </td>
+        <td>
+            {{post.rating_article }}
+        </td>
+        <td>
+            {% for cat in post.post_category.all %}
+                {{cat }}
+            {% endfor %}
+        </td>
+
+    </tr>
+    {% endfor %}
+</table>
+
+
+
+<!-- Проверяем что поддерживается постраничный вывод -->
+{% if is_paginated %}
+    
+    <!-- Если доступна предыдущая страница, то даём ссылку на неё и самую первую страницу -->
+    {% if page_obj.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ page_obj.previous_page_number }}"><<<</a>
+    {% endif %}
+    
+    <!-- Показываем только текущую страницу и ближайшие к ней, чтобы список не тянулся и не захламлял страницу -->
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <a>{{ num }}</a>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    
+    <!-- Если есть следующая страница, то даём ссылку на неё и на самую последнюю страницу -->
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">>>></a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+    {% endif %}
+    
+    {% endif %}
+
+
+ 
+{% endblock content %}
