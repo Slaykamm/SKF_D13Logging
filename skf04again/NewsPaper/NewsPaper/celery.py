@@ -12,8 +12,8 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'WeeklyNewsUpdate2': {
         'task': 'news.tasks.weeklyCategoryUpdates',
-        'schedule': crontab(),
-#        'schedule': crontab(hour=8, minute=0, day_of_week='monday'),
+#        'schedule': crontab(),
+        'schedule': crontab(hour=8, minute=0, day_of_week='monday'),
 #        'args': (5,),
     },
 }
