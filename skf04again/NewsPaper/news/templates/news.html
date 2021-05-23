@@ -13,7 +13,8 @@ NEWS
     <HR WIDTH="100%" ALIGN="center" SIZE="5">
 
     <h3> Отображено новостей на странице: {{ posts|length  }} </h3>
-
+    {% load cache %}
+        {% cache 500 mainPageTable %}
     <table>
     <thead>
         <th>
@@ -34,7 +35,7 @@ NEWS
         <th>
             <p style="text-align: center;"><strong>Категория </strong></p>
         </th>
-
+    {% endcache %}
 
     </thead>
     {% for post in posts %} <!-- поменяем products на filter.qs, т.к. теперь мы забираем уже отобранную по каким-то параметрам информацию -->
@@ -43,7 +44,7 @@ NEWS
             <a href="{% url 'news_detail' post.id %}">{{ post.post_title|truncatewords:7 |censor}}</a> <!-- При нажатии на имя товара в таблице нас теперь будет перекидывать на страницу с информацией о товаре -->
             <a href="{% url 'post_update' post.id %}"><u><strong>Редактировать</strong></u></a> <!-- добавим ссылку на редактирование товара-->
             <a href="{% url 'post_delete' post.id %}"><u><strong>Удалить</strong> </u></a> <!-- добавим ссылку на удаление товара-->
-
+ 
 
         </td>
         <td>

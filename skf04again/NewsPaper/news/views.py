@@ -120,7 +120,8 @@ class SubscribeView(DetailView):
                 )
 
                 msg.attach_alternative(html_content, "text/html")
-                msg.send() # отсылаем
+                print("печатаем что отправили подписку", 'user', user, 'cat', cat, 'title', emailtitle, 'text',emailarticle, 'art_id',id)
+                #msg.send() # отсылаем
 
         context['form'] = PostForm()  # added
         return context
@@ -200,12 +201,16 @@ class PostSearch(ListView):
         context['categories'] = Category.objects.all()
         context['form'] = PostForm()  # added
         context['logged_user'] = self.request.user.username
+#        print('это')
+#        print(NewsFilter(self.request.GET, queryset=self.get_queryset()))
+#        print(self.request.GET.author_post__in)
         return context
         #added below
 
     def post(self, request, *args, **kwargs):
+        print("ТУТ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!") 
         form = self.form_class(request.POST) # создаём новую форму, забиваем в неё данные из POST запроса 
- 
+        print(form)
         if form.is_valid(): # если пользователь ввёл всё правильно и нигде не накосячил то сохраняем новый товар
             form.save()
  

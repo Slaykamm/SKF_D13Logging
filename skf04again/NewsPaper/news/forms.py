@@ -18,3 +18,4 @@ class CategoryForm(ModelForm):
         model = Category
         fields = []
 
+ 

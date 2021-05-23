@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -193,3 +194,167 @@ CELERY_RESULT_BACKEND = 'redis://localhost:6379'
 CELERY_ACCEPT_CONTENT = ['application/json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': os.path.join(BASE_DIR, 'cache_files'), # Указываем, куда будем сохранять кэшируемые файлы! Не забываем создать папку cache_files внутри папки с manage.py!
+    }
+}
+
+
+LOGGING = {
+    'version' : 1,
+    'disable_existing_looger' : False,
+    'loggers' : {
+        'django' : {
+            'handlers': ['consoleDebug', 'consoleWarning', 'consoleErrorCritical', 'news'],
+            'level' : 'DEBUG'
+        },
+        #ниже логгеры п. 3 дз and p. 5
+        'django.request' : {
+            'handlers' : ['errorFile', 'mail_admins'],
+            'level' : 'ERROR'
+        },
+        'django.server' : {
+            'handlers' : ['errorFile', 'mail_admins'],
+            'level' : 'ERROR'
+        },
+
+        'django.template' : {
+            'handlers' : ['errorFile'],
+            'level' : 'ERROR'
+        },
+
+        'django.db_backends' : {
+            'handlers' : ['errorFile'],
+            'level' : 'ERROR'
+        },
+#ниже логгер п.4 homeworks
+        'django.security' : {
+            'handlers' : ['securityIssues'],
+            'level' : 'DEBUG'
+        },
+
+    },
+
+    'filters': {
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },       
+    },
+
+    'handlers' : {
+#обработчик  для п. 1 дз для дебуга ворнинга и еррора с критикал.
+        'consoleDebug' : {
+            'level' : 'DEBUG',  
+            'filters': ['require_debug_true'],
+            'class' : 'logging.StreamHandler',
+            'formatter' : 'debugformatter'
+
+        },
+        'consoleWarning' : {
+            'level' : 'WARNING',
+            'filters': ['require_debug_true'],
+            'class' : 'logging.StreamHandler',
+            'formatter' : 'warningfortatter'
+        },
+        'consoleErrorCritical' : {
+            'level' : 'ERROR',
+            'filters': ['require_debug_true'],
+            'class' : 'logging.StreamHandler',
+            'formatter' : 'errorformatter'
+
+        },
+        
+#обработчик  для п. 2 дз
+        'news' : {
+            'level' : 'INFO',
+            'filters': ['require_debug_false'],
+            'class' : 'logging.FileHandler',
+            'filename' : 'general.log',
+            'formatter' : 'infologger'
+        },
+    
+#обработчик для п3 дз
+        'errorFile' : {
+            'level' : 'ERROR',
+            'class' : 'logging.FileHandler',
+            'filename' : 'errors.log',
+            'formatter' : 'errorFileFormatter'
+
+        },
+#handler for p.4 homeworks
+        'securityIssues' : {
+            'level' : 'DEBUG',
+            'class' : 'logging.FileHandler',
+            'filename' : 'security.log',
+            'formatter' : 'securityFormatter'
+        },
+#handler for p. 5 homeworks
+
+        'mail_admins': {
+            'level': 'ERROR',
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'formatter' : 'emailAdminFormatter',
+        },
+
+    },
+
+#форматер для п.1 дз
+    'formatters' : {
+
+        'debugformatter' : {
+            'format' : '{levelname} {asctime} {message}',
+            'datetime' : '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+
+        'warningfortatter' : {
+            'format' : '{levelname} {asctime} {pathname} {message}',
+            'datetime' : '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+
+        'errorformatter' : {
+            'format' : '{levelname} {asctime} {exc_info} {pathname} {message}',
+            'datetime' : '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+#formatter for p. 5 homeworks
+        'emailAdminFormatter' : {
+            'format' : '{levelname} {asctime}  {pathname} {message}',
+            'datetime' : '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+
+        },
+        
+
+#форматер для обработчика п.2 дз
+
+        'infologger' : {
+            'format' : '{asctime} {levelname} {module} {message}',
+            'datetime' : '%Y.%m.%d %H:%M:%S',
+            'style': '{',
+        },
+
+# форматер для п. 3 дз
+        'errorFileFormatter' : {
+          'format' : '{asctime} {levelname} {message} {exc_info}',  
+          'datetime' : '%Y.%m.%d %H:%M:%S',
+          'style': '{',          
+        },
+
+# fortmatter for p. 4 homeworks
+        'securityFormatter' : {
+          'format' : '{asctime} {levelname} {module} {message}',  
+          'datetime' : '%Y.%m.%d %H:%M:%S',
+          'style': '{',   
+        },
+    },
+
+}

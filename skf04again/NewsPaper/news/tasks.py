@@ -46,7 +46,8 @@ def creationNotice(newsId):
         )
 
         msg.attach_alternative(html_content, "text/html")
-        msg.send() # отсылаем
+        print("печатаем что отправили:", 'title', cat, 'text', emailarticle,  'art_id',id)
+        #msg.send() # отсылаем
 
 @shared_task
 def weeklyCategoryUpdates():
@@ -97,5 +98,5 @@ def weeklyCategoryUpdates():
                 )
 
                 msg.attach_alternative(html_content, "text/html")
-#                print("Вместо отправки печаем")
-                msg.send() # отсылаем
+                print("Вместо отправки еженедельной подписки печатаем", 'user', userName, 'art_id',user_id_list_for_sending)
+#                msg.send() # отсылаем

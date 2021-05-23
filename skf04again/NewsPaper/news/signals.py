@@ -39,7 +39,8 @@ def notify_subscribers_newscreation(sender, instance, **kwargs): #created,
         )
 
         msg.attach_alternative(html_content, "text/html")
-        msg.send() # отсылаем
+        print("вместо отправки извещения на изменение печатаем",  'title', instance.post_title, 'text', instance.article_text, 'art_id', id )
+        #msg.send() # отсылаем
 
 
 @receiver(post_save, sender=Post) 
